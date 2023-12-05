@@ -3,7 +3,7 @@ from django.db import models
 
 class ProblemSet(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(verbose_name="Subject of the problem set")
 
     def __str__(self):
         return self.name

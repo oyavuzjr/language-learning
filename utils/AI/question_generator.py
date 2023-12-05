@@ -1,16 +1,11 @@
-from pprint import pprint
+from django.conf import settings
 from typing import List
-import dotenv
 from langchain.prompts.chat import ChatPromptTemplate
 from langchain.chat_models import ChatOpenAI
 from langchain.schema.output_parser import StrOutputParser
 from langchain.output_parsers import CommaSeparatedListOutputParser
 from langchain.pydantic_v1 import BaseModel, Field, validator
-
-dotenv.load_dotenv()
 from langchain.output_parsers import PydanticOutputParser
-
-output_parser = CommaSeparatedListOutputParser()
 
 class Exercises(BaseModel):
     questions: List[str] = Field(description="List of exercises with blank spots")
@@ -25,21 +20,18 @@ The answers should just be the blank parts of the questions.
 {format_instructions}
 """
 
+def generate_question(problem_set):
+    
+    model = ChatOpenAI()
+    parser = PydanticOutputParser(pydantic_object=Exercises)
+    prompt = ChatPromptTemplate.from_template(template,partial_variables={"format_instructions": parser.get_format_instructions()})
+    chain = prompt | model
+    output = chain.invoke({"topic": problem_set.description})
+    parsed = parser.invoke(output)
+    data =  {
+                "questions":parsed.questions,
+                "answers":parsed.answers
+            }
+    print(data)
+    return data
 
-model = ChatOpenAI()
-parser = PydanticOutputParser(pydantic_object=Exercises)
-
-prompt = ChatPromptTemplate.from_template(template,partial_variables={"format_instructions": parser.get_format_instructions()})
-
-chain = prompt | model
-
-output = chain.invoke({"topic": "memorization of imparfait tense conjugation"})
-
-
-parsed = parser.invoke(output)
-
-data = {"questions":parsed.questions,
-"answers":parsed.answers}
-
-
-pprint(data)

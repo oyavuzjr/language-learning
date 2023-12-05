@@ -6,6 +6,9 @@ class QuestionInline(admin.TabularInline):
     model = Question
 
 class ProblemSetAdmin(admin.ModelAdmin):
+    baton_form_includes = [
+        ('generate-toolbar.html', 'name', 'top', ),
+    ]
     inlines = [
         QuestionInline,
     ]
