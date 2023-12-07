@@ -1,3 +1,85 @@
-<div style="float:right;" class="my-4">
-    <button type="button" class="btn btn-danger"><span style="font-size:15px;">✨</span> AI Generate</button>
+<div x-data="{ 
+    generateAI() {
+        let targetUrl = '/admin/learning/problemset/ai-generate/';
+        let descriptionField = document.querySelector('#id_description');
+        let description = descriptionField.value;
+
+        fetch(targetUrl, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: `description=${encodeURIComponent(description)}`
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            addRowsIfNeeded(data, () => {
+                fillData(data);
+            });
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+}" style="float:right;" class="my-4">
+    <button @click="generateAI" type="button" class="btn btn-danger">
+        <span style="font-size:15px;">✨</span> AI Generate
+    </button>
 </div>
+
+<script type="text/javascript">
+function addRowsIfNeeded(data, callback) {
+    let questions = document.querySelectorAll('.dynamic-question_set');
+    let emptyRowIndex = findFirstEmptyRow(questions);
+    
+    const neededRows = data['questions'].length;
+    const availableRows = emptyRowIndex === -1 ? 0 : questions.length - emptyRowIndex;
+    const rowsToAdd = neededRows - availableRows;
+
+    for (let i = 0; i < rowsToAdd; i++) {
+        const addRow = document.querySelector('.add-row');
+        if (addRow) {
+            const link = addRow.querySelector('a');
+            link.click();
+        }
+    }
+
+    // Wait for the DOM to update with new rows
+    setTimeout(callback, 300); // 300 milliseconds delay
+}
+
+function fillData(data) {
+    let questions = document.querySelectorAll('.dynamic-question_set');
+    let dataIndex = 0;
+
+    questions.forEach((question, index) => {
+        const textFields = question.querySelectorAll('.vTextField');
+        if (textFields[0].value.trim() === '' && textFields[1].value.trim() === '') {
+            if (dataIndex < data['questions'].length) {
+                textFields[0].value = data['questions'][dataIndex];
+                textFields[1].value = data['answers'][dataIndex];
+                textFields[0].style.width = '100%';
+                textFields[1].style.width = '100%';
+                dataIndex++;
+            }
+        }
+    });
+}
+
+function findFirstEmptyRow(questions) {
+    for (let i = 0; i < questions.length; i++) {
+        const textFields = questions[i].querySelectorAll('.vTextField');
+        if (textFields[0].value.trim() === '' && textFields[1].value.trim() === '') {
+            return i;
+        }
+    }
+    return -1; // No empty row found
+}
+</script>

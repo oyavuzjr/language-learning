@@ -20,13 +20,13 @@ The answers should just be the blank parts of the questions.
 {format_instructions}
 """
 
-def generate_question(problem_set):
+def generate_question(description: str):
     
     model = ChatOpenAI()
     parser = PydanticOutputParser(pydantic_object=Exercises)
     prompt = ChatPromptTemplate.from_template(template,partial_variables={"format_instructions": parser.get_format_instructions()})
     chain = prompt | model
-    output = chain.invoke({"topic": problem_set.description})
+    output = chain.invoke({"topic": description})
     parsed = parser.invoke(output)
     data =  {
                 "questions":parsed.questions,

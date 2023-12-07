@@ -15,4 +15,4 @@ class Question(models.Model):
     problem_set = models.ForeignKey(ProblemSet, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return ""
