@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "learning",
+    'widget_tweaks',
     'baton.autodiscover'
 ]
 

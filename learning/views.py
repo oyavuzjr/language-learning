@@ -9,10 +9,10 @@ from utils.group_required import group_required  # Import your custom decorator
 @group_required(['Teacher'])
 def AI_generate(request):
     description = request.POST.get('description', '')
-    generated_problems = generate_question(description)
-    # generated_problems = {
-    #     "questions": ["Question 1", "Question 2", "Question 3", "Question 4"],
-    #     "answers": ["Answer 1", "Answer 2", "Answer 3", "Answer 4"]
-    # }
+    # generated_problems = generate_question(description)
+    generated_problems = {
+        "questions": ["Question 1", "Question 2", "Question 3", "Question 4"],
+        "answers": ["Answer 1", "Answer 2", "Answer 3", "Answer 4"]
+    }
 
     return HttpResponse(json.dumps(generated_problems))
