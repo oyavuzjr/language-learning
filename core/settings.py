@@ -19,7 +19,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 BATON = {
     'SITE_HEADER': 'Language Learning',
     'SITE_TITLE': 'Language Learning',
-    "SITE_HEADER":'<img height="100" width="100" src="/static/img/logo.png"/>'
+    "SITE_HEADER":'<img height="200" width="200" src="/static/img/logo.png"/>'
 }
 
 from pathlib import Path

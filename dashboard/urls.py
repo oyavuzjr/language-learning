@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import path, include
 
+from dashboard.views import dashboard_view
+from learning.views import question_view
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('baton/', include('baton.urls')),
-    path('dashboard/', include('dashboard.urls')),
+    path('', dashboard_view, name='dashboard'),
+    path('question/<int:pk>/', question_view, name='dashboard-question'),
 ]

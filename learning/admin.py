@@ -22,7 +22,7 @@ class ProblemSetAdmin(admin.ModelAdmin):
         return custom_urls + urls
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ("__str__",'text', 'answer', 'problem_set')
+    list_display = ("__str__",'text', 'correct_answer', 'problem_set')
     list_filter = ('problem_set',)
 
 admin.site.register(ProblemSet,ProblemSetAdmin)
