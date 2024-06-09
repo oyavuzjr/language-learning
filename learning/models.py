@@ -38,8 +38,7 @@ class Question(BaseQuestion):
             <h3 class="font-medium text-xl">{self.text}</h3>
         <div>
             <div class="relative mt-2">
-                <input  x-model="user_answer" type="text" name="name" id="name" class="peer block w-full border-0 bg-gray-50 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 outline-none" autocomplete="off" placeholder="Jane Smith">
-                <div class="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-indigo-600" aria-hidden="true"></div>
+                <input  x-model="user_answer" type="text" name="name" id="name" class="input input-bordered input-md w-full max-w-xs" autocomplete="off" placeholder="Answer">
             </div>
         </div>
         """
@@ -52,7 +51,7 @@ class FreeResponseQuestion(BaseQuestion):
             <h3 class="font-medium text-xl">{self.text}</h3>
             <div>
                 <div class="mt-2">
-                    <textarea x-model="user_answer" rows="4" name="comment" id="comment" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    <textarea x-model="user_answer" rows="4" name="comment" id="comment" class="textarea textarea-bordered md:w-3/5"></textarea>
                 </div>
             </div>
         </div>
@@ -67,7 +66,7 @@ class MultipleChoiceQuestion(BaseQuestion):
 
     def get_html(self):
         choices_html = ''.join([
-            f'''<button  x-on:click="selectChoice({i}) type="button" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mr-2 min-w-7">{choice}</button>'''
+            f'''<button  x-on:click="selectChoice({i}) type="button" class="btn btn-accent mr-2">{choice}</button>'''
                                  for i, choice in enumerate(self.choices)])
         return f"""
         <div class="mb-8" x-data="multipleChoiceQuestion({self.id})">
