@@ -10,6 +10,9 @@ WORKDIR /app
 
 # Install dependencies
 COPY requirements.txt /app/
+RUN apt-get update \
+    && apt-get install -y postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
