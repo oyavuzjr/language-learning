@@ -19,7 +19,6 @@ def problemset_view(request, pk):
     
     # Generate HTML for each question
     questions_html = [question.get_html() for question in questions]
-    print("@@@@",questions_html)
 
     context = {
         'problemset': problemset,

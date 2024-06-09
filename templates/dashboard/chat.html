@@ -26,7 +26,7 @@
             </div>
         {% endfor %}
     </div>
-    <div class="bg-base-100 fixed bottom-0 left-0 w-full lg:w-[calc(100%-16rem)] lg:left-64 p-4 shadow-lg border-neutral border-t">
+    <div class="bg-base-100 fixed bottom-0 left-0 w-full lg:w-[calc(100%-16rem)] lg:left-64 p-4 shadow-lg border-base-200 border-t">
         <form method="post" class="flex flex-1 items-center" x-data="{ 
             resize () { 
                 this.$refs.textarea.style.height = 'auto'; 
@@ -42,4 +42,9 @@
             <button type="submit" class="bg-blue-500 text-white p-2 rounded">Send</button>
         </form>
     </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        console.log("Hello, World!")
+    </script>
 {% endblock %}
