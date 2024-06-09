@@ -4,6 +4,12 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
+class Language(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class ProblemSet(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(verbose_name="Subject of the problem set")

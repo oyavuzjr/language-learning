@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ProblemSet, Question, FreeResponseQuestion, MultipleChoiceQuestion, CompletionQuestion, Submission
+from .models import Language, ProblemSet, Question, FreeResponseQuestion, MultipleChoiceQuestion, CompletionQuestion, Submission
 from django.urls import path
 from .views import AI_generate
 
@@ -68,3 +68,4 @@ admin.site.register(FreeResponseQuestion, FreeResponseQuestionAdmin)
 admin.site.register(MultipleChoiceQuestion, MultipleChoiceQuestionAdmin)
 admin.site.register(CompletionQuestion, CompletionQuestionAdmin)
 admin.site.register(Submission, SubmissionAdmin)
+admin.site.register(Language)
