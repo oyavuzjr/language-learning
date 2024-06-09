@@ -2,7 +2,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from learning.models import CompletionQuestion, FreeResponseQuestion, MultipleChoiceQuestion, ProblemSet, Question
 from django.contrib.auth.decorators import login_required
 from .models import Chat, Message
-# Create your views here.
+from utils.AI.chat import send_message  # Import the send_message function
+
 def dashboard_view(request):
     return render(request, 'dashboard/base.html')
 
@@ -26,9 +27,6 @@ def problemset_view(request, pk):
     }
     return render(request, 'dashboard/problemset.html', context)
 
-
-
-
 @login_required
 def create_chat_view(request):
     chat = Chat.objects.create(user=request.user)
@@ -42,7 +40,10 @@ def chat_view(request, pk):
     if request.method == "POST":
         text = request.POST.get('text')
         Message.objects.create(chat=chat, sender=request.user, text=text)
-        # Add AI response logic here
-        ai_response = "This is a response from the AI."
+        
+        # Get AI response
+        ai_response = send_message(text)  # Call the send_message function with the user's text
+        # Save AI response to the database
         Message.objects.create(chat=chat, sender=None, text=ai_response)
+    
     return render(request, 'dashboard/chat.html', {'chat': chat})
