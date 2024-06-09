@@ -1,0 +1,53 @@
+<!-- dashboard/templates/dashboard/problemset.html -->
+{% extends 'dashboard/base.html' %}
+
+{% block questions %}
+    <div id="questions-container">
+        {% for question_html in questions_html %}
+            <div class="question">
+                {{ question_html|safe }}
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        function question(questionId) {
+            return {
+                user_answer: '',
+                submitAnswer() {
+                    // Handle answer submission logic
+                }
+            }
+        }
+
+        function freeResponseQuestion(questionId) {
+            return {
+                user_answer: '',
+                submitAnswer() {
+                    // Handle answer submission logic
+                }
+            }
+        }
+
+        function multipleChoiceQuestion(questionId) {
+            return {
+                user_answer: null,
+                selectChoice(index) {
+                    this.user_answer = index;
+                },
+                submitAnswer() {
+                    // Handle answer submission logic
+                }
+            }
+        }
+
+        function completionQuestion(questionId) {
+            return {
+                user_answers: [],
+                submitAnswer() {
+                    const answer = this.user_answers.join(' ').trim();
+                    // Handle answer submission logic
+                }
+            }
+        }
+    </script>
+{% endblock %}

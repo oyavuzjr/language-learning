@@ -24,3 +24,6 @@ def question_view(request, pk):
     # Determine the question type dynamically if necessary
     question = get_object_or_404(Question, pk=pk)
     return HttpResponse(question.get_html())
+
+
+
