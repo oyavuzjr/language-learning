@@ -90,7 +90,7 @@ class CompletionQuestion(BaseQuestion):
         input_index = 0
         for part in parts:
             if '_' in part:
-                html_parts.append(f'<input type="text" class="w-16 text-center border-b border-gray-300 focus:border-indigo-600 outline-none" x-model="user_answers[{input_index}]" />')
+                html_parts.append(f'<input type="text" class="text-center border-b border-gray-300 focus:border-indigo-600 outline-none" x-model="user_answers[{input_index}]" />')
                 input_index += 1
             else:
                 html_parts.append(f'<span>{part}</span>')
