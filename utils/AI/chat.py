@@ -5,8 +5,11 @@ from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import CommaSeparatedListOutputParser
 from langchain.schema import AIMessage
 from langchain import LLMChain
-from langchain.prompts import HumanMessagePromptTemplate, ChatPromptTemplate, SystemMessagePromptTemplate
+from langchain.prompts import HumanMessagePromptTemplate, ChatPromptTemplate, SystemMessagePromptTemplate, MessagesPlaceholder
 from dotenv import load_dotenv
+from langchain.memory import ConversationBufferMemory
+from dashboard.models import Chat
+from .history import DjangoChatMessageHistory  # Import the custom history class
 
 template = """You are a French teacher explaining concepts to a student who is an English speaker.
 Explain the concepts the student is struggling with in English, providing examples in French.
@@ -20,21 +23,25 @@ load_dotenv()
 
 chat = ChatOpenAI()
 
-prompt = ChatPromptTemplate(
-    input_variables=["text"],
-    messages=[
-        SystemMessagePromptTemplate.from_template("You are a French teacher explaining concepts to a student who is an English speaker. Explain in English providing examples in French."),
-        HumanMessagePromptTemplate.from_template("{text}. Provide response in HTML format."),
-    ]
-)
+def send_message(chat_id: int, text: str):
+    chat_instance = Chat.objects.get(id=chat_id)
+    memory = ConversationBufferMemory(memory_key="messages", return_messages=True, chat_memory=DjangoChatMessageHistory(chat_id))
 
-chain = LLMChain(
-    llm=chat,
-    prompt=prompt
-)
+    prompt = ChatPromptTemplate(
+        input_variables=["text", "messages"],
+        messages=[
+            MessagesPlaceholder(variable_name="messages"),
+            SystemMessagePromptTemplate.from_template("You are a French teacher explaining concepts to a student who is an English speaker. Explain in English providing examples in French."),
+            HumanMessagePromptTemplate.from_template("{text} Think step by step and explain."),
+        ]
+    )
 
+    chain = LLMChain(
+        llm=chat,
+        prompt=prompt,
+        memory=memory,
+    )
 
-def send_message(text: str):
     result = chain({"text": text})
     print(result)
     return result["text"]

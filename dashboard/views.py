@@ -42,7 +42,7 @@ def chat_view(request, pk):
         Message.objects.create(chat=chat, sender=request.user, text=text)
         
         # Get AI response
-        ai_response = send_message(text)  # Call the send_message function with the user's text
+        ai_response = send_message(chat.id, text)  # Pass chat_id to send_message
         # Save AI response to the database
         Message.objects.create(chat=chat, sender=None, text=ai_response)
     
