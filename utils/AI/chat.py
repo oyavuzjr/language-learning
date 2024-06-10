@@ -21,7 +21,12 @@ The student writes to you:
 
 load_dotenv()
 
-chat = ChatOpenAI()
+chat = ChatOpenAI(    
+    model="gpt-4o",
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=2,)
 
 def send_message(chat_id: int, text: str):
     memory = ConversationBufferMemory(memory_key="messages", return_messages=True, chat_memory=DjangoChatMessageHistory(chat_id))
@@ -30,7 +35,7 @@ def send_message(chat_id: int, text: str):
         input_variables=["text", "messages"],
         messages=[
             MessagesPlaceholder(variable_name="messages"),
-            SystemMessagePromptTemplate.from_template("You are a French teacher explaining concepts to a student who is an English speaker. Provide HTML response only."),
+            SystemMessagePromptTemplate.from_template("You are a French teacher explaining concepts to a student who is an English speaker. Provide HTML response contained in a single div only."),
             HumanMessagePromptTemplate.from_template("{text}"),
         ]
     )
