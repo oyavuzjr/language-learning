@@ -24,15 +24,14 @@ load_dotenv()
 chat = ChatOpenAI()
 
 def send_message(chat_id: int, text: str):
-    chat_instance = Chat.objects.get(id=chat_id)
     memory = ConversationBufferMemory(memory_key="messages", return_messages=True, chat_memory=DjangoChatMessageHistory(chat_id))
 
     prompt = ChatPromptTemplate(
         input_variables=["text", "messages"],
         messages=[
             MessagesPlaceholder(variable_name="messages"),
-            SystemMessagePromptTemplate.from_template("You are a French teacher explaining concepts to a student who is an English speaker. Explain in English providing examples in French."),
-            HumanMessagePromptTemplate.from_template("{text} Think step by step and explain."),
+            SystemMessagePromptTemplate.from_template("You are a French teacher explaining concepts to a student who is an English speaker. Provide HTML response only."),
+            HumanMessagePromptTemplate.from_template("{text}"),
         ]
     )
 

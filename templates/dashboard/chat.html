@@ -22,7 +22,13 @@
                     {% endif %}
                     <time class="text-xs opacity-50">{{ message.created_at|date:"H:i" }}</time>
                 </div>
-                <div class="chat-bubble mb-2">{{ message.text }}</div>
+                <div class="chat-bubble mb-2" >
+                    {% if message.sender %}
+                        {{ message.text }}
+                    {% else %}
+                        {{ message.text|safe }}
+                    {% endif %}
+                </div>
             </div>
         {% endfor %}
     </div>
