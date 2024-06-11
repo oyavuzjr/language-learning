@@ -35,7 +35,7 @@ def send_message(chat_id: int, text: str):
         input_variables=["text", "messages"],
         messages=[
             MessagesPlaceholder(variable_name="messages"),
-            SystemMessagePromptTemplate.from_template("You are a French teacher explaining concepts to a student in English. Provide response HTML tags."),
+            SystemMessagePromptTemplate.from_template("You are a French teacher explaining concepts to a student in English. Provide response as HTML elements in a single div."),
             HumanMessagePromptTemplate.from_template("{text}\n\nDon't let the student get off topic"),
         ]
     )
