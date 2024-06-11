@@ -6,18 +6,22 @@ from .views import AI_generate
 class QuestionInline(admin.TabularInline):
     model = Question
     extra = 1
+    classes = ('collapse', 'collapse-entry', )
 
 class FreeResponseQuestionInline(admin.TabularInline):
     model = FreeResponseQuestion
     extra = 1
+    classes = ('collapse', 'collapse-entry', )
 
 class MultipleChoiceQuestionInline(admin.TabularInline):
     model = MultipleChoiceQuestion
     extra = 1
+    classes = ('collapse', 'collapse-entry', )
 
 class CompletionQuestionInline(admin.TabularInline):
     model = CompletionQuestion
     extra = 1
+    classes = ('collapse', 'collapse-entry', )
 
 class ProblemSetAdmin(admin.ModelAdmin):
     baton_form_includes = [
