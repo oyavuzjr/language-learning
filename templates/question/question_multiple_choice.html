@@ -1,10 +1,17 @@
 <!-- templates/question_multiple_choice.html -->
 {% extends "question/base.html" %}
 {% block content %}
-<div>
+<div x-data="{ selectedChoice: null, selectChoice(index) { this.selectedChoice = index } }">
     <h4 class="font-medium text-xl mb-2">{{ question.text|safe }}</h4>
     {% for choice in question.choices %}
-        <button x-on:click="selectChoice({{ forloop.counter0 }})" type="button" class="btn btn-accent mr-2">{{ choice }}</button>
+        <button 
+            x-on:click="selectChoice({{ forloop.counter0 }})" 
+            :class="selectedChoice === null ? 'btn-secondary' : (selectedChoice === {{ forloop.counter0 }} ? 'btn-primary' : 'bg-gray-400 border-gray-400')" 
+            type="button" 
+            class="btn mr-2"
+        >
+            {{ choice }}
+        </button>
     {% endfor %}
 </div>
 {% endblock %}
