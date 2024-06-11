@@ -1,0 +1,9 @@
+<!-- templates/question_multiple_choice.html -->
+{% extends "question/base.html" %}
+{% block content %}
+<div>
+    {% for choice in question.choices %}
+        <button x-on:click="selectChoice({{ forloop.counter0 }})" type="button" class="btn btn-accent mr-2">{{ choice }}</button>
+    {% endfor %}
+</div>
+{% endblock %}

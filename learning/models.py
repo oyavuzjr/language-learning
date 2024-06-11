@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.template.loader import render_to_string
 
 class Language(models.Model):
     name = models.CharField(max_length=100)
@@ -39,29 +40,12 @@ class Question(BaseQuestion):
         return answer.strip().lower() == self.correct_answer.strip().lower()
 
     def get_html(self):
-        return f"""
-        <div class="mb-8" x-data="question({self.id})">
-            <h3 class="font-medium text-xl">{self.text}</h3>
-        <div>
-            <div class="relative mt-2">
-                <input  x-model="user_answer" type="text" name="name" id="name" class="input input-bordered input-md w-full max-w-xs" autocomplete="off" placeholder="Answer">
-            </div>
-        </div>
-        """
+        return render_to_string('question/question_text.html', {'question': self, 'question_type': 'question'})
 
 class FreeResponseQuestion(BaseQuestion):
 
     def get_html(self):
-        return f"""
-        <div class="mb-8" x-data="freeResponseQuestion({self.id})">
-            <h3 class="font-medium text-xl">{self.text}</h3>
-            <div>
-                <div class="mt-2">
-                    <textarea x-model="user_answer" rows="4" name="comment" id="comment" class="textarea textarea-bordered md:w-3/5"></textarea>
-                </div>
-            </div>
-        </div>
-        """
+        return render_to_string('question/question_free_response.html', {'question': self, 'question_type': 'freeResponseQuestion'})
 
 class MultipleChoiceQuestion(BaseQuestion):
     choices = models.JSONField()
@@ -71,16 +55,7 @@ class MultipleChoiceQuestion(BaseQuestion):
         return int(answer) == self.correct_answer
 
     def get_html(self):
-        choices_html = ''.join([
-            f'''<button  x-on:click="selectChoice({i}) type="button" class="btn btn-accent mr-2">{choice}</button>'''
-                                 for i, choice in enumerate(self.choices)])
-        return f"""
-        <div class="mb-8" x-data="multipleChoiceQuestion({self.id})">
-            <h3 class="mb-2 font-medium text-xl">{self.text}</h3>
-            <div>{choices_html}</div>
-        </div>
-        """
-
+        return render_to_string('question/question_multiple_choice.html', {'question': self, 'question_type': 'multipleChoiceQuestion'})
 
 class CompletionQuestion(BaseQuestion):
     correct_answer = models.CharField(max_length=100)
@@ -89,25 +64,7 @@ class CompletionQuestion(BaseQuestion):
         return answer.strip().lower() == self.correct_answer.strip().lower()
 
     def get_html(self):
-        # Replace sequences of underscores with a single input field
-        html_parts = []
-        parts = re.split(r'(_+)', self.text)
-        input_index = 0
-        for part in parts:
-            if '_' in part:
-                html_parts.append(f'<input type="text" class="text-center border-b border-gray-300 focus:border-accent outline-none" x-model="user_answers[{input_index}]" />')
-                input_index += 1
-            else:
-                html_parts.append(f'<span>{part}</span>')
-
-        html_content = ''.join(html_parts)
-
-        return f"""
-        <div class="mb-8" x-data="completionQuestion({self.id})">
-            <h3 class="font-medium text-xl">{html_content}</h3>
-        </div>
-        """
-
+        return render_to_string('question/sentence_completion.html', {'question': self, 'question_type': 'completionQuestion'})
 
 
 class Submission(models.Model):
