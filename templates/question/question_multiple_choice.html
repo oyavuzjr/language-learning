@@ -2,6 +2,7 @@
 {% extends "question/base.html" %}
 {% block content %}
 <div>
+    <h4 class="font-medium text-xl mb-2">{{ question.text|safe }}</h4>
     {% for choice in question.choices %}
         <button x-on:click="selectChoice({{ forloop.counter0 }})" type="button" class="btn btn-accent mr-2">{{ choice }}</button>
     {% endfor %}

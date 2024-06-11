@@ -2,6 +2,7 @@
 {% extends "question/base.html" %}
 {% block content %}
 <div class="mt-2">
-    <textarea x-model="user_answer" rows="4" name="comment" id="comment" class="textarea textarea-bordered md:w-3/5"></textarea>
+    <h4 class="font-medium text-xl mb-2">{{ question.text|safe }}</h4>
+    <textarea x-model="user_answer" rows="4" name="comment" id="comment" class="textarea textarea-bordered md:w-3/5 focus:outline-primary"></textarea>
 </div>
 {% endblock %}

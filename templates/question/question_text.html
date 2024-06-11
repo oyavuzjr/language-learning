@@ -2,7 +2,7 @@
 {% extends "question/base.html" %}
 {% block content %}
 <div class="relative mt-2">
-    <h3 class="font-medium text-xl">{{ question.text|safe }}</h3>
-    <input x-model="user_answer" type="text" name="name" id="name" class="input input-bordered input-md w-full max-w-xs" autocomplete="off" placeholder="Answer">
+    <h4 class="font-medium text-xl mb-2">{{ question.text|safe }}</h4>
+    <input x-model="user_answer" type="text" name="name" id="name" class="focus:outline-primary input input-bordered input-md w-full max-w-xs" autocomplete="off" placeholder="Answer">
 </div>
 {% endblock %}
