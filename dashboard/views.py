@@ -4,6 +4,18 @@ from django.contrib.auth.decorators import login_required
 from .models import Chat, Message
 from utils.AI.chat import send_message  # Import the send_message function
 
+
+
+def get_nav_items(x=5):
+    recent_chats = Chat.objects.order_by('-created_at')[:x]
+    
+    nav_items = [
+        {'title': 'Recent Chats', 'items': recent_chats, 'attribute': 'created_at'},        # Add more items as needed
+    ]
+    
+    return nav_items
+
+
 def dashboard_view(request):
     return render(request, 'dashboard/base.html')
 
@@ -46,4 +58,4 @@ def chat_view(request, pk):
         # Save AI response to the database
         Message.objects.create(chat=chat, sender=None, text=ai_response)
     
-    return render(request, 'dashboard/chat.html', {'chat': chat})
+    return render(request, 'dashboard/chat.html', {'chat': chat,'nav_items': get_nav_items()})

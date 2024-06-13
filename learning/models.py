@@ -5,23 +5,24 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.template.loader import render_to_string
 
-class Language(models.Model):
+from core.models import TimestampMixin
+
+class Language(TimestampMixin,models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
-class ProblemSet(models.Model):
+class ProblemSet(TimestampMixin,models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(verbose_name="Subject of the problem set")
 
     def __str__(self):
         return self.name
 
-class BaseQuestion(models.Model):
+class BaseQuestion(TimestampMixin,models.Model):
     id = models.AutoField(primary_key=True)
     text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
     problem_set = models.ForeignKey(ProblemSet, on_delete=models.CASCADE)
 
     def get_html(self):
@@ -67,7 +68,7 @@ class CompletionQuestion(BaseQuestion):
         return render_to_string('question/sentence_completion.html', {'question': self, 'question_type': 'completionQuestion'})
 
 
-class Submission(models.Model):
+class Submission(TimestampMixin,models.Model):
     date = models.DateTimeField(auto_now_add=True)
     correct = models.BooleanField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
