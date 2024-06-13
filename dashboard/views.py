@@ -3,18 +3,26 @@ from learning.models import CompletionQuestion, FreeResponseQuestion, MultipleCh
 from django.contrib.auth.decorators import login_required
 from .models import Chat, Message
 from utils.AI.chat import send_message  # Import the send_message function
+from django.urls import reverse
 
 
 
 def get_nav_items(x=5):
     recent_chats = Chat.objects.order_by('-created_at')[:x]
+    homeworks = ProblemSet.objects.order_by('-created_at')[:x]
     
     nav_items = [
-        {'title': 'Recent Chats', 'items': recent_chats, 'attribute': 'created_at'},        # Add more items as needed
+        {
+            'title': 'Chats',
+            'items': [{'id': chat.id, 'user': chat.user, 'created_at': chat.created_at, 'url': reverse('chat-view', args=[chat.id])} for chat in recent_chats],
+        },
+        {
+            'title': 'Problem Sets',
+            'items': [{'id': homework.id, 'created_at': homework.created_at, 'url': reverse('problemset-view', args=[homework.id])} for homework in homeworks],
+        },
     ]
     
     return nav_items
-
 
 def dashboard_view(request):
     return render(request, 'dashboard/base.html')
@@ -36,6 +44,7 @@ def problemset_view(request, pk):
     context = {
         'problemset': problemset,
         'questions_html': questions_html,
+        'nav_items': get_nav_items()
     }
     return render(request, 'dashboard/problemset.html', context)
 

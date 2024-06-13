@@ -110,7 +110,7 @@
     <!-- Sidebar component, swap this element with another sidebar if you like -->
     <div class="mt-5 flex h-0 flex-1 flex-col overflow-y-auto pt-1">
       <!-- User account dropdown -->
-      <div class="relative inline-block px-3 text-left">
+      {% comment %} <div class="relative inline-block px-3 text-left">
         <div>
           <button type="button" class="group w-full rounded-md bg-gray-100 px-3.5 py-2 text-left text-sm font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100" id="options-menu-button" aria-expanded="false" aria-haspopup="true">
             <span class="flex w-full items-center justify-between">
@@ -152,20 +152,12 @@
           <div class="py-1" role="none">
             <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="options-menu-item-5">Logout</a>
           </div>
-        </div> {% endcomment %}
-      </div>
+        </div> 
+      </div> 
+      {% endcomment %}
       
       {% include 'dashboard/nav_item.html' %}
-      <div class="px-3 mt-4">
-        <div tabindex="0" class="collapse bg-base-200 hover:bg-base-100 focus:bg-base-200 rounded-lg p"> 
-          <div class="collapse-title text-md font-medium hover:cursor-pointer"  style="padding:0.5rem !important; min-height:0;">
-            <p class="ml-3">Homework</p>
-          </div>
-          <div class="collapse-content"> 
-            <p class="hover:bg-gray-100 rounded-md p-1 hover:cursor-pointer text-sm"> New Homework</p>
-          </div>
-        </div>
-      </div>
+      
       <!-- Navigation -->
       <nav class="mt-4 px-3">
         <div class="">
