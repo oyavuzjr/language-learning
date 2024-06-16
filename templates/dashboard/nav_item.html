@@ -3,7 +3,7 @@
 {% for nav_item in nav_items %}
 <div class="px-3 mt-4">
     <div class="collapse bg-base-200 hover:bg-base-100 peer-checked:bg-primary focus:bg-base-200 rounded-lg p">
-        <input type="radio" name="nav-accordion" id="nav-accordion-{{ forloop.counter }}" class="hidden" {% if forloop.first %}checked{% endif %}/> 
+        <input type="radio" name="nav-accordion" id="nav-accordion-{{ forloop.counter }}" class="hidden"/> 
         <label for="nav-accordion-{{ forloop.counter }}" class="collapse-title text-md font-medium hover:cursor-pointer" style="padding:0.5rem !important; min-height:0;">
             <p class="ml-3">{{ nav_item.title }}</p>
         </label>
