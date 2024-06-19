@@ -1,5 +1,11 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
+{% block scripts %}
+    <script>
+        console.log("Hello, World!")
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    </script>
+{% endblock %}
 {% block page_content %}
     <h1 class="mb-2 font-bold text-3xl">Chat</h1>
     <div id="chat-box" class="pb-40"> <!-- Increase padding to ensure no overlap with the fixed form -->
@@ -50,8 +56,4 @@
         </form>
     </div>
 {% endblock %}
-{% block scripts %}
-    <script type="text/javascript">
-        console.log("Hello, World!")
-    </script>
-{% endblock %}
+
