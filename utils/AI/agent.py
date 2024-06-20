@@ -13,7 +13,12 @@ from utils.AI.tools import create_sentence_completion_problems
 
 load_dotenv()
 
-chat = ChatOpenAI()
+chat = ChatOpenAI(
+    model="gpt-4o",
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=2,)
 
 prompt = ChatPromptTemplate(
     messages=[
