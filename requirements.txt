@@ -64,3 +64,4 @@ urllib3==2.1.0
 yarl==1.9.3
 django-widget-tweaks
 jsonfield
+langgraph

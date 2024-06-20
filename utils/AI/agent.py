@@ -7,8 +7,7 @@ from langchain.prompts import (
 )
 from langchain.agents import AgentExecutor, create_openai_tools_agent
 from dotenv import load_dotenv
-
-from utils.AI.tools import create_sentence_completion_problems
+from utils.AI.tools import create_lecture, create_sentence_completion_problems, lecture_tool
 
 
 load_dotenv()
@@ -28,7 +27,7 @@ prompt = ChatPromptTemplate(
     ]
 )
 
-tools=[create_sentence_completion_problems]
+tools=[create_sentence_completion_problems,create_lecture]
 agent = create_openai_tools_agent(chat, tools, prompt)
 
 agent_executor = AgentExecutor(
@@ -37,4 +36,5 @@ agent_executor = AgentExecutor(
     tools=tools
 )
 
-agent_executor({"input": "I need to get better at Passe Compose"})
+result = agent_executor({"input": "I need to get better at Passe Composé. Teach me"})
+
