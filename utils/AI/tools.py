@@ -1,6 +1,7 @@
 from typing import List
 from langchain.tools import BaseTool, StructuredTool, tool, Tool
 from langchain.output_parsers import PydanticOutputParser, StructuredOutputParser
+from dashboard.models import CompletionQuestion
 from utils.AI.question_generator import Exercises
 from langchain.pydantic_v1 import BaseModel, Field, validator
 
@@ -11,8 +12,8 @@ class SentenceCompletionArgsSchema(BaseModel):
 
 
 class CreateLectureArgsSchema(BaseModel):
-    topic:str
-    lecture:str
+    topic:str = Field(description="Topic Of the Lecture")
+    lecture:str = Field(description="The markdown body of the lecture text")
 
 @tool("create_sentence_completion_problems",args_schema=SentenceCompletionArgsSchema)
 def create_sentence_completion_problems(questions:List[str], answers:List[str]):
@@ -21,7 +22,13 @@ def create_sentence_completion_problems(questions:List[str], answers:List[str]):
     Provide questions where the blank part is '___'
     And provide answers that fill in the blank.
     """
-    return({'questions': questions, 'answers': answers})
+    ids = []
+    for i in range(len(questions)):
+        q = CompletionQuestion(correct_answer=answers[i], text=questions[i])
+        q.save()
+        ids.append(q.id)
+        
+    return({'questions': questions, 'answers': answers,'ids':ids})
     return {"success":True}
 
 
@@ -31,6 +38,8 @@ def create_lecture(topic:str,lecture:str):
     Creates a lecture in the topic that the student has requested.
     """
     # return {"success":True}
+    # lec = Lecture.objects.create(title=topic,text=lecture)
+    # ids = [lec.id]
     return {"topic":topic,"lecture":lecture}
 
 

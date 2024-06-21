@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from learning.models import CompletionQuestion, FreeResponseQuestion, MultipleChoiceQuestion, ProblemSet, Question
 from django.contrib.auth.decorators import login_required
-from .models import Chat, Message
+from .models import Chat, AIMessage, HumanMessage
 from utils.AI.chat import send_message  # Import the send_message function
 from django.urls import reverse
 
@@ -52,7 +52,7 @@ def problemset_view(request, pk):
 def create_chat_view(request):
     chat = Chat.objects.create(user=request.user)
     # Add an initial message from the AI
-    Message.objects.create(chat=chat, sender=None, text="Hello! How can I assist you today?")
+    AIMessage.objects.create(chat=chat, text="Hello! How can I assist you today?")
     return redirect('chat-view', pk=chat.pk)
 
 @login_required
@@ -60,19 +60,23 @@ def chat_view(request, pk):
     chat = get_object_or_404(Chat, pk=pk, user=request.user)
     if request.method == "POST":
         text = request.POST.get('text')
-        Message.objects.create(chat=chat, sender=request.user, text=text)
         
         # Get AI response
         json_data, text, output, tools = send_message(chat.id, text)  # Pass chat_id to send_message
         # Save AI response to the database
+        HumanMessage.objects.create(chat=chat, sender=request.user, text=text)
         
         for tool in tools:
             tool_to_use, args = tool
             print("Tool name: ", tool_to_use.tool)
             print("Args     : ", args)
 
+        if isinstance(tools,list) and len(tools)>0:
+            pass
+        else:
+            AIMessage.objects.create(chat=chat, text=output)
 
 
-        Message.objects.create(chat=chat, sender=None, text=output, json_data=json_data,tools_data=tools)
+        # Message.objects.create(chat=chat, sender=None, text=output, json_data=json_data,tools_data=tools)
     
     return render(request, 'dashboard/chat.html', {'chat': chat,'nav_items': get_nav_items()})

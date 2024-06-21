@@ -1,19 +1,47 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import User
 import jsonfield
+from polymorphic.models import PolymorphicModel
+from django.template.loader import render_to_string
 
 class Chat(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     json_history = jsonfield.JSONField(default=dict)  # Add this field to store the chat history
 
-class Message(models.Model):
-    chat = models.ForeignKey(Chat, related_name='messages', on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-    text = models.TextField()
+class BaseMessage(PolymorphicModel):
+    chat = models.ForeignKey(Chat, related_name='messages', on_delete=models.CASCADE,null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    json_data = jsonfield.JSONField(default=dict)  # Add this field to store the chat history
-    tools_data = jsonfield.JSONField(default=dict)  # Add this field to store the chat history
+
+class HumanMessage(BaseMessage):
+    text = models.TextField()
+    sender = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+
+class AIMessage(BaseMessage):
+    text = models.TextField()
+
+class ToolMessage(BaseMessage):
+    tool_name = models.CharField(max_length=100, editable=False)
+    response = models.TextField()
+    tool_args = jsonfield.JSONField(default=dict)
+    def save(self, *args, **kwargs):
+        if not self.tool_name:
+            self.tool_name = self.get_tool_name()
+        super().save(*args, **kwargs)
+
+    def get_tool_name(self):
+        # This method should be overridden in subclasses to set the correct tool_name
+        raise NotImplementedError("Subclasses must implement get_tool_name method")
+
+class CompletionQuestion(ToolMessage):
+    correct_answer = models.CharField(max_length=100)
+    text = models.TextField()
+
+    def is_correct(self, answer):
+        return answer.strip().lower() == self.correct_answer.strip().lower()
+
+    def get_html(self):
+        return render_to_string('question/sentence_completion.html', {'question': self, 'question_type': 'completionQuestion'})
+
+    def get_tool_name(self):
+        return "create_sentence_completion_problems"

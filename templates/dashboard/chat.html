@@ -9,6 +9,7 @@
 {% block page_content %}
     <h1 class="mb-2 font-bold text-3xl">Chat</h1>
     <div id="chat-box" class="pb-40"> <!-- Increase padding to ensure no overlap with the fixed form -->
+        {{chat.messages.all}}
         {% for message in chat.messages.all %}
             <div class="chat {% if message.sender %}chat-end{% else %}chat-start{% endif %}">
                 <div class="chat-image avatar">
