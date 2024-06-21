@@ -75,14 +75,14 @@ class MultipleChoiceQuestion(BaseQuestion):
     def get_html(self):
         return render_to_string('question/question_multiple_choice.html', {'question': self, 'question_type': 'multipleChoiceQuestion'})
 
-class CompletionQuestion(BaseQuestion):
-    correct_answer = models.CharField(max_length=100)
+# class CompletionQuestion(BaseQuestion):
+#     correct_answer = models.CharField(max_length=100)
 
-    def is_correct(self, answer):
-        return answer.strip().lower() == self.correct_answer.strip().lower()
+#     def is_correct(self, answer):
+#         return answer.strip().lower() == self.correct_answer.strip().lower()
 
-    def get_html(self):
-        return render_to_string('question/sentence_completion.html', {'question': self, 'question_type': 'completionQuestion'})
+#     def get_html(self):
+#         return render_to_string('question/sentence_completion.html', {'question': self, 'question_type': 'completionQuestion'})
 
 
 class Submission(TimestampMixin,models.Model):

@@ -16,9 +16,15 @@ class BaseMessage(PolymorphicModel):
 class HumanMessage(BaseMessage):
     text = models.TextField()
     sender = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    def get_html(self):
+        return render_to_string('question/message.html', {'message': self, 'question_type': 'completionQuestion'})
+
 
 class AIMessage(BaseMessage):
     text = models.TextField()
+    def get_html(self):
+        return render_to_string('question/message.html', {'message': self, 'question_type': 'completionQuestion'})
+
 
 class ToolMessage(BaseMessage):
     tool_name = models.CharField(max_length=100, editable=False)
@@ -41,7 +47,7 @@ class CompletionQuestion(ToolMessage):
         return answer.strip().lower() == self.correct_answer.strip().lower()
 
     def get_html(self):
-        return render_to_string('question/sentence_completion.html', {'question': self, 'question_type': 'completionQuestion'})
+        return render_to_string('question/sentence_completion.html', {'message': self, 'question_type': 'completionQuestion'})
 
     def get_tool_name(self):
         return "create_sentence_completion_problems"

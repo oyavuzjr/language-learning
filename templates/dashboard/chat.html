@@ -9,35 +9,10 @@
 {% block page_content %}
     <h1 class="mb-2 font-bold text-3xl">Chat</h1>
     <div id="chat-box" class="pb-40"> <!-- Increase padding to ensure no overlap with the fixed form -->
-        {{chat.messages.all}}
-        {% for message in chat.messages.all %}
-            <div class="chat {% if message.sender %}chat-end{% else %}chat-start{% endif %}">
-                <div class="chat-image avatar">
-                    <div class="w-12 rounded-full">
-                        {% if message.sender %}
-                            <img alt="{{ message.sender.username }}" src="{% if message.sender.profile.image %}{{ message.sender.profile.image.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg{% endif %}" />
-                        {% else %}
-                            <img alt="AI" src="{% static 'img/logo2.png' %}" />
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="chat-header">
-                    {% if message.sender %}
-                        {{ message.sender.username }}
-                    {% else %}
-                        AI
-                    {% endif %}
-                    <time class="text-xs opacity-50">{{ message.created_at|date:"H:i" }}</time>
-                </div>
-                <div class="chat-bubble mb-2 text-gray-900 text-xl {% if message.sender %}bg-secondary{% else %}bg-primary{% endif %}" >
-                    {% if message.sender %}
-                        {{ message.text }}
-                    {% else %}
-                        {{ message.text|safe }}
-                    {% endif %}
-                </div>
-            </div>
-        {% endfor %}
+        {% comment %} {% for message in chat.messages.all %}
+            {{message}}
+        {% endfor %} {% endcomment %}
+        {{generated_content|safe}}
     </div>
     <div class="bg-base-100 fixed bottom-0 left-0 w-full lg:w-[calc(100%-16rem)] lg:left-64 p-4 shadow-lg border-base-200 border-t">
         <form method="post" class="flex flex-1 items-center" x-data="{ 

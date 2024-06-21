@@ -4,7 +4,7 @@
 
 {% block content %}
 <div>
-    {% for part in question.text|split_regex:"(_+)" %}
+    {% for part in message.text|split_regex:"(_+)" %}
         {% if part|contains_underscore %}
             <input type="text" class="text-xl text-center border-b border-gray-300 focus:border-accent outline-none" x-model="user_answers[{{ forloop.counter0 }}]" />
         {% else %}

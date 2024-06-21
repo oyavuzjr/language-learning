@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Language, Lecture, ProblemSet, Question, FreeResponseQuestion, MultipleChoiceQuestion, CompletionQuestion, Submission
+from .models import Language, Lecture, ProblemSet, Question, FreeResponseQuestion, MultipleChoiceQuestion, Submission
 from django.urls import path
 from .views import AI_generate
 
@@ -18,28 +18,28 @@ class MultipleChoiceQuestionInline(admin.TabularInline):
     extra = 1
     classes = ('collapse', 'collapse-entry', )
 
-class CompletionQuestionInline(admin.TabularInline):
-    model = CompletionQuestion
-    extra = 1
-    classes = ('collapse', 'collapse-entry', )
+# class CompletionQuestionInline(admin.TabularInline):
+#     model = CompletionQuestion
+#     extra = 1
+#     classes = ('collapse', 'collapse-entry', )
 
-class ProblemSetAdmin(admin.ModelAdmin):
-    baton_form_includes = [
-        ('AI-generate-button.html', 'description', 'bottom'),
-    ]
-    inlines = [
-        QuestionInline,
-        FreeResponseQuestionInline,
-        MultipleChoiceQuestionInline,
-        CompletionQuestionInline,
-    ]
+# class ProblemSetAdmin(admin.ModelAdmin):
+#     baton_form_includes = [
+#         ('AI-generate-button.html', 'description', 'bottom'),
+#     ]
+#     inlines = [
+#         QuestionInline,
+#         FreeResponseQuestionInline,
+#         MultipleChoiceQuestionInline,
+#         CompletionQuestionInline,
+#     ]
 
-    def get_urls(self):
-        urls = super().get_urls()
-        custom_urls = [
-            path('ai-generate/', self.admin_site.admin_view(AI_generate), name='problemset_ai_generate')
-        ]
-        return custom_urls + urls
+#     def get_urls(self):
+#         urls = super().get_urls()
+#         custom_urls = [
+#             path('ai-generate/', self.admin_site.admin_view(AI_generate), name='problemset_ai_generate')
+#         ]
+#         return custom_urls + urls
 
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ("__str__", 'text', 'correct_answer', 'problem_set', 'created_at')
@@ -72,10 +72,10 @@ class LectureToolAdmin(admin.ModelAdmin):
     search_fields = ('title', 'text')
 
 admin.site.register(Lecture, LectureToolAdmin)
-admin.site.register(ProblemSet, ProblemSetAdmin)
+# admin.site.register(ProblemSet, ProblemSetAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(FreeResponseQuestion, FreeResponseQuestionAdmin)
 admin.site.register(MultipleChoiceQuestion, MultipleChoiceQuestionAdmin)
-admin.site.register(CompletionQuestion, CompletionQuestionAdmin)
+# admin.site.register(CompletionQuestion, CompletionQuestionAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Language)
