@@ -47,7 +47,16 @@ class CompletionQuestion(ToolMessage):
         return answer.strip().lower() == self.correct_answer.strip().lower()
 
     def get_html(self):
-        return render_to_string('question/sentence_completion.html', {'message': self, 'question_type': 'completionQuestion'})
+        return render_to_string('question/sentence_completion.html', {'message': self})
 
     def get_tool_name(self):
         return "create_sentence_completion_problems"
+
+class Lecture(ToolMessage):
+    text = models.TextField()
+
+    def get_html(self):
+        return render_to_string('question/lecture.html', {'lecture': self})
+
+    def get_tool_name(self):
+        return "create_lecture"
