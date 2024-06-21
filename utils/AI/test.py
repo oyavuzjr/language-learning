@@ -1,84 +1,60 @@
-from typing import List, Optional, TypedDict
+from typing import Dict, Tuple
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import (
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate,
+    MessagesPlaceholder,
+    SystemMessagePromptTemplate
+)
+from langchain.agents import AgentExecutor, create_openai_tools_agent
+from langchain.memory import ConversationBufferMemory
+from dotenv import load_dotenv
+from utils.AI.history import DjangoChatMessageHistory
+from utils.AI.tools import create_lecture, create_sentence_completion_problems, lecture_tool
 
-from langchain.output_parsers.openai_tools import JsonOutputToolsParser
-from langchain_core.messages import AIMessage, HumanMessage
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.runnables import RunnableConfig
-from langchain_openai import ChatOpenAI
-from langgraph.graph import END, StateGraph
-from langgraph.graph.graph import CompiledGraph
-from utils.AI.tools import sentence_completion_tool, lecture_tool
-
-class GenerativeUIState(TypedDict, total=False):
-    input: HumanMessage
-    result: Optional[str]
-    """Plain text response if no tool was used."""
-    tool_calls: Optional[List[dict]]
-    """A list of parsed tool calls."""
-    tool_result: Optional[dict]
-    """The result of a tool call."""
-
-
-def invoke_model(state: GenerativeUIState, config: RunnableConfig) -> GenerativeUIState:
-    tools_parser = JsonOutputToolsParser()
-    initial_prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                "You are a helpful assistant. You're provided a list of tools, and an input from the user.\n"
-                + "Your job is to determine whether or not you have a tool which can handle the users input, or respond with plain text.",
-            ),
-            MessagesPlaceholder("input"),
-        ]
-    )
-    model = ChatOpenAI(model="gpt-4o", temperature=0, streaming=True)
-    tools = [sentence_completion_tool,lecture_tool]
-    model_with_tools = model.bind_tools(tools)
-    chain = initial_prompt | model_with_tools
-    result = chain.invoke({"input": state["input"]}, config)
-
-    if not isinstance(result, AIMessage):
-        raise ValueError("Invalid result from model. Expected AIMessage.")
-
-    if isinstance(result.tool_calls, list) and len(result.tool_calls) > 0:
-        parsed_tools = tools_parser.invoke(result, config)
-        return {"tool_calls": parsed_tools}
-    else:
-        return {"result": str(result.content)}
-
-
-def invoke_tools_or_return(state: GenerativeUIState) -> str:
-    if "result" in state and isinstance(state["result"], str):
-        return END
-    elif "tool_calls" in state and isinstance(state["tool_calls"], list):
-        return "invoke_tools"
-    else:
-        raise ValueError("Invalid state. No result or tool calls found.")
-
-
-def invoke_tools(state: GenerativeUIState) -> GenerativeUIState:
-    tools_map = {
-        "create_sentence_completion_problems": sentence_completion_tool,
+def setup_memory(chat_id:int) -> Tuple[Dict, ConversationBufferMemory]:
+    """
+    Sets up memory for the open ai functions agent.
+    :return a tuple with the agent keyword pairs and the conversation memory.
+    """
+    agent_kwargs = {
+        "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
     }
+    memory = ConversationBufferMemory(memory_key="memory", return_messages=True,chat_memory=DjangoChatMessageHistory(chat_id))
 
-    if state["tool_calls"] is not None:
-        tool = state["tool_calls"][0]
-        selected_tool = tools_map[tool["type"]]
-        return {"tool_result": selected_tool.invoke(tool["args"])}
-    else:
-        raise ValueError("No tool calls found in state.")
+    return agent_kwargs, memory
+
+load_dotenv()
+
+chat = ChatOpenAI(
+    model="gpt-4o",
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=2,
+)
+
+prompt = ChatPromptTemplate(
+    messages=[
+        SystemMessagePromptTemplate.from_template("You are a French teacher who is teaching an English speaker. You are to provide instructions and explanations in English while the examples and material will be French."),
+        HumanMessagePromptTemplate.from_template("{input}"),
+        MessagesPlaceholder(variable_name="agent_scratchpad")
+    ]
+)
+
+tools = [create_sentence_completion_problems, create_lecture]
+agent = create_openai_tools_agent(chat, tools, prompt)
+
+agent_kwargs, memory = setup_memory(56)
+
+agent_executor = AgentExecutor(
+    agent=agent,
+    verbose=True,
+    tools=tools,
+    agent_kwargs=agent_kwargs,
+    memory=memory,
+)
 
 
-def create_graph() -> CompiledGraph:
-    workflow = StateGraph(GenerativeUIState)
-
-    workflow.add_node("invoke_model", invoke_model)  # type: ignore
-    workflow.add_node("invoke_tools", invoke_tools)
-    workflow.add_conditional_edges("invoke_model", invoke_tools_or_return)
-    workflow.set_entry_point("invoke_model")
-    workflow.set_finish_point("invoke_tools")
-
-    graph = workflow.compile()
-    return graph
-
-
+# result = agent_executor({"input": "I need to get better at Passe Composé. Teach me"})
+result = agent_executor({"input": "I would like some exercises on it."})
