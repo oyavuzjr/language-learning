@@ -15,3 +15,4 @@ class Message(models.Model):
     sender = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    json_data = jsonfield.JSONField(default=dict)  # Add this field to store the chat history
