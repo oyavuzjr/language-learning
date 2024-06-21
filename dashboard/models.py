@@ -16,3 +16,4 @@ class Message(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     json_data = jsonfield.JSONField(default=dict)  # Add this field to store the chat history
+    tools_data = jsonfield.JSONField(default=dict)  # Add this field to store the chat history

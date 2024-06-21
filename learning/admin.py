@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Language, ProblemSet, Question, FreeResponseQuestion, MultipleChoiceQuestion, CompletionQuestion, Submission
+from .models import Language, Lecture, ProblemSet, Question, FreeResponseQuestion, MultipleChoiceQuestion, CompletionQuestion, Submission
 from django.urls import path
 from .views import AI_generate
 
@@ -66,6 +66,12 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_filter = ('correct', 'date', 'user')
     search_fields = ('question__text', 'user__username', 'user_answer')
 
+class LectureToolAdmin(admin.ModelAdmin):
+    list_display = ('title', 'text', 'problem_set', 'created_at')
+    list_filter = ('problem_set',)
+    search_fields = ('title', 'text')
+
+admin.site.register(Lecture, LectureToolAdmin)
 admin.site.register(ProblemSet, ProblemSetAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(FreeResponseQuestion, FreeResponseQuestionAdmin)

@@ -70,6 +70,4 @@ def send_message(chat_id: int, text: str):
 
 
     result = agent_executor({"text": text})
-    # result = agent(text)
-    print(result)
-    return result, result['output']
+    return result, result["text"],result['output'], result['intermediate_steps']

@@ -4,18 +4,11 @@ from langchain.output_parsers import PydanticOutputParser, StructuredOutputParse
 from utils.AI.question_generator import Exercises
 from langchain.pydantic_v1 import BaseModel, Field, validator
 
-# parser = PydanticOutputParser(pydantic_object=Exercises)
-# output_parser = StructuredOutputParser.from_response_schemas(Exercises)
-# format_instruction = output_parser.get_format_instructions()
 
 class SentenceCompletionArgsSchema(BaseModel):
     questions: List[str] = Field(description="List of exercises with blank spots")
     answers: List[str] = Field(description="List of answers omitted from the blank spots")
 
-
-# parser = PydanticOutputParser(pydantic_object=Exercises)
-# output_parser = StructuredOutputParser.from_response_schemas(Exercises)
-# format_instruction = output_parser.get_format_instructions()
 
 class CreateLectureArgsSchema(BaseModel):
     topic:str

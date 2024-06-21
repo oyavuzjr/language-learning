@@ -63,8 +63,16 @@ def chat_view(request, pk):
         Message.objects.create(chat=chat, sender=request.user, text=text)
         
         # Get AI response
-        json_data, ai_response = send_message(chat.id, text)  # Pass chat_id to send_message
+        json_data, text, output, tools = send_message(chat.id, text)  # Pass chat_id to send_message
         # Save AI response to the database
-        Message.objects.create(chat=chat, sender=None, text=ai_response, json_data=json_data)
+        
+        for tool in tools:
+            tool_to_use, args = tool
+            print("Tool name: ", tool_to_use.tool)
+            print("Args     : ", args)
+
+
+
+        Message.objects.create(chat=chat, sender=None, text=output, json_data=json_data,tools_data=tools)
     
     return render(request, 'dashboard/chat.html', {'chat': chat,'nav_items': get_nav_items()})

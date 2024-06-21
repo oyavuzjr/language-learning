@@ -20,13 +20,30 @@ class ProblemSet(TimestampMixin,models.Model):
     def __str__(self):
         return self.name
 
-class BaseQuestion(TimestampMixin,models.Model):
+class BaseGenerativeElement(TimestampMixin,models.Model):
     id = models.AutoField(primary_key=True)
     text = models.TextField()
     problem_set = models.ForeignKey(ProblemSet, on_delete=models.CASCADE)
 
     def get_html(self):
         raise NotImplementedError("Subclasses should implement this method.")
+
+    class Meta:
+        abstract = True
+
+class Lecture(BaseGenerativeElement):
+    title = models.CharField(max_length=100)
+
+    def get_html(self):
+        return f"""
+        <div class="lecture">
+            <h2>{self.title}</h2>
+            <p>{self.text}</p>
+        </div>
+        """
+
+
+class BaseQuestion(BaseGenerativeElement):
 
     def is_correct(self, answer):
         raise NotImplementedError("Subclasses should implement this method.")
