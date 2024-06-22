@@ -3,7 +3,7 @@
     <div class="event">
         <div class="label">
             {% if message.sender %}
-                <img height=100 width=100 alt="{{ message.sender.username }}" src="{% if message.sender.profile.image %}{{ message.sender.profile.image.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg{% endif %}" />
+                <img height=100 width=100 alt="{{ message.sender.username }}" src="{% if message.sender.profile.image %}{{ message.sender.profile.image.url }}{% else %}https://cdn-icons-png.freepik.com/512/8742/8742495.png{% endif %}" />
             {% else %}
                 <img height=100 width=100 alt="AI" src="{% static 'img/logo2.png' %}" />
             {% endif %}
