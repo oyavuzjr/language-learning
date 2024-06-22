@@ -1,27 +1,34 @@
 {% load static %}
-<div class="chat {% if message.sender %}chat-end{% else %}chat-start{% endif %}">
-    <div class="chat-image avatar">
-        <div class="w-12 rounded-full">
+<div class="ui feed">
+    <div class="event {% if message.sender %}right aligned{% endif %}">
+        <div class="label">
             {% if message.sender %}
-                <img alt="{{ message.sender.username }}" src="{% if message.sender.profile.image %}{{ message.sender.profile.image.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg{% endif %}" />
+                <img height=100 width=100 alt="{{ message.sender.username }}" src="{% if message.sender.profile.image %}{{ message.sender.profile.image.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg{% endif %}" />
             {% else %}
-                <img alt="AI" src="{% static 'img/logo2.png' %}" />
+                <img height=100 width=100 alt="AI" src="{% static 'img/logo2.png' %}" />
             {% endif %}
         </div>
-    </div>
-    <div class="chat-header">
-        {% if message.sender %}
-            {{ message.sender.username }}
-        {% else %}
-            AI
-        {% endif %}
-        <time class="text-xs opacity-50">{{ message.created_at|date:"H:i" }}</time>
-    </div>
-    <div class="chat-bubble mb-2 text-gray-900 text-xl {% if message.sender %}bg-secondary{% else %}bg-primary{% endif %}" >
-        {% if message.sender %}
-            {{ message.text }}
-        {% else %}
-            {{ message.text|safe }}
-        {% endif %}
+        <div class="content">
+            <div class="date">
+                3 days ago
+            </div>
+            <div class="summary">
+                <a>{% if message.sender %}
+                    {{ message.sender.username }}
+                {% else %}
+                    AI
+                {% endif %}</a> created a post
+            </div>
+            <div class="extra text">
+                {% if message.sender %}
+                    {{ message.text }}
+                {% else %}
+                    {{ message.text|safe }}
+                {% endif %}
+            </div>
+            <div class="meta">
+                <time class="date">{{ message.created_at|date:"H:i" }}</time>
+            </div>
+        </div>
     </div>
 </div>
