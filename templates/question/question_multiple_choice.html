@@ -2,13 +2,14 @@
 {% extends "question/message.html" %}
 {% block content %}
 <h4 class="font-medium text-xl mb-2">{{ message.text|safe }}</h4>
-<div class="ui grid" x-data="{ selectedChoice: null, selectChoice(index) { this.selectedChoice = index } }">
+<div class="ui three column doubling grid" x-data="{ selectedChoice: null, selectChoice(index) { this.selectedChoice = index } }">
     {% for choice in message.choices %}
         <button 
             x-on:click="selectChoice({{ forloop.counter0 }})" 
             :class="selectedChoice === null ? 'ui  button' : (selectedChoice === {{ forloop.counter0 }} ? 'ui primary button' : 'ui button')" 
             type="button" 
-            class="three wide column "
+            class="column"
+            style="margin-top:10px;"
         >
             {{ choice }}
         </button>
