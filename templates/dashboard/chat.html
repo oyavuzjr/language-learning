@@ -9,10 +9,13 @@
 {% block page_content %}
     <h1 class="ui header">Chat</h1>
     <div id="chat-box" class="" style="padding-bottom: 40px;"> <!-- Ensure no overlap with the fixed form -->
-        {% comment %} {% for message in chat.messages.all %}
+        <div class="ui raised very padded text container segment">
+            
+            {% comment %} {% for message in chat.messages.all %}
             {{message}}
-        {% endfor %} {% endcomment %}
-        {{generated_content|safe}}
+            {% endfor %} {% endcomment %}
+            {{generated_content|safe}}
+        </div>
     </div>
     <div class="ui segment fixed bottom-0 left-0 w-full lg:w-[calc(100%-16rem)] lg:left-64 p-4 shadow-lg border-base-200 border-t">
         <form method="post" class="ui form" x-data="{ 

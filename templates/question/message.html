@@ -1,6 +1,6 @@
 {% load static %}
-<div class="ui feed">
-    <div class="event {% if message.sender %}right aligned{% endif %}">
+<div class="ui feed" {% if message.sender %}style="float:right;"{% endif %}>
+    <div class="event">
         <div class="label">
             {% if message.sender %}
                 <img height=100 width=100 alt="{{ message.sender.username }}" src="{% if message.sender.profile.image %}{{ message.sender.profile.image.url }}{% else %}https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg{% endif %}" />
@@ -10,7 +10,7 @@
         </div>
         <div class="content">
             <div class="date">
-                3 days ago
+                {{message.created_at|date:"H:i"}}
             </div>
             <div class="summary">
                 <a>{% if message.sender %}
@@ -20,11 +20,13 @@
                 {% endif %}</a> created a post
             </div>
             <div class="extra text">
+                {% block content %}
                 {% if message.sender %}
                     {{ message.text }}
                 {% else %}
                     {{ message.text|safe }}
                 {% endif %}
+                {% endblock %}
             </div>
             <div class="meta">
                 <time class="date">{{ message.created_at|date:"H:i" }}</time>

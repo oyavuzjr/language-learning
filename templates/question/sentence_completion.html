@@ -1,10 +1,11 @@
 <!-- templates/sentence_completion.html -->
-{% comment %} {% extends "question/base.html" %} {% endcomment %}
+{% extends "question/message.html" %}
 {% load custom_filters %}
 
 {% block content %}
+
 <ul class="ui list">
-<li>
+<li class="">
     {% for part in message.text|split_regex:"(_+)" %}
         
         {% if part|contains_underscore %}
