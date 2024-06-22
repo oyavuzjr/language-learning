@@ -7,8 +7,8 @@ from langchain.pydantic_v1 import BaseModel, Field, validator
 
 
 class SentenceCompletionArgsSchema(BaseModel):
-    questions: List[str] = Field(description="List of exercises with blank spots")
-    answers: List[str] = Field(description="List of answers omitted from the blank spots")
+    question:str = Field(description="Text of the question with blank spot")
+    answer: str = Field(description="The answer omitted from the blank spot")
 
 class MultipleChoiceArgsSchema(BaseModel):
     text: str = Field(description="The question text")
@@ -21,20 +21,17 @@ class CreateLectureArgsSchema(BaseModel):
     lecture:str = Field(description="The markdown body of the lecture text")
 
 @tool("create_sentence_completion_problems",args_schema=SentenceCompletionArgsSchema)
-def create_sentence_completion_problems(questions:List[str], answers:List[str]):
+def create_sentence_completion_problems(question:str, answer:str):
     """
-    Create 5 sentence completion problems for the given topic.
-    Provide questions where the blank part is '___'
-    And provide answers that fill in the blank.
+    Create a sentence completion problem for the given topic.
+    Provide question where the blank part is '___'
+    And provide answer that fill in the blank.
     """
-    ids = []
-    for i in range(len(questions)):
-        q = CompletionQuestion(correct_answer=answers[i], text=questions[i])
-        q.save()
-        ids.append(q.id)
-        
-    return({'questions': questions, 'answers': answers,'ids':ids})
-    return {"success":True}
+
+    q = CompletionQuestion(correct_answer=answer, text=question)
+    q.save()
+    ids = [q.id]
+    return({'question': question, 'answer': answer,'ids':ids})
 
 @tool("create_multiple_choice_problems",args_schema=MultipleChoiceArgsSchema)
 def create_multiple_choice_problems(text:str, choices:List[str], correct_answer_index:int):
@@ -48,7 +45,6 @@ def create_multiple_choice_problems(text:str, choices:List[str], correct_answer_
     ids = [q.id]
 
     return({'ids':ids})
-    return {"success":True}
 
 
 @tool("create_lecture",args_schema=CreateLectureArgsSchema)
