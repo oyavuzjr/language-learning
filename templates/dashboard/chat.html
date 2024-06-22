@@ -7,29 +7,33 @@
     </script>
 {% endblock %}
 {% block page_content %}
-    <h1 class="mb-2 font-bold text-3xl">Chat</h1>
-    <div id="chat-box" class="pb-40"> <!-- Increase padding to ensure no overlap with the fixed form -->
-        {% comment %} {% for message in chat.messages.all %}
+    <h1 class="ui header">Chat</h1>
+    <div id="chat-box" class="" style="padding-bottom: 40px;"> <!-- Ensure no overlap with the fixed form -->
+        <div class="ui raised very padded text container segment">
+            
+            {% comment %} {% for message in chat.messages.all %}
             {{message}}
-        {% endfor %} {% endcomment %}
-        {{generated_content|safe}}
+            {% endfor %} {% endcomment %}
+            {{generated_content|safe}}
+        </div>
     </div>
-    <div class="bg-base-100 fixed bottom-0 left-0 w-full lg:w-[calc(100%-16rem)] lg:left-64 p-4 shadow-lg border-base-200 border-t">
-        <form method="post" class="flex flex-1 items-center" x-data="{ 
+    <div class="ui segment fixed bottom-0 left-0 w-full lg:w-[calc(100%-16rem)] lg:left-64 p-4 shadow-lg border-base-200 border-t">
+        <form method="post" class="ui form" x-data="{ 
             resize () { 
                 this.$refs.textarea.style.height = 'auto'; 
                 this.$refs.textarea.style.height = this.$refs.textarea.scrollHeight + 'px'; 
             } 
         }" @input="resize">
             {% csrf_token %}
-            <textarea name="text"
-                x-ref="textarea"
-                @input="resize()"
-                placeholder="Type your message here."
-                class="flex-grow p-2 border rounded mr-2 resize-none overflow-hidden min-h-[80px] textarea textarea-bordered"></textarea>
-            <button type="submit" class="btn btn-accent p-2">Send</button>
-
+            <div class="field" style="display: flex; align-items: center;">
+                <textarea name="text"
+                    x-ref="textarea"
+                    @input="resize()"
+                    placeholder="Type your message here."
+                    class="ui input"
+                    style="flex-grow: 1; margin-right: 1em; min-height: 80px; resize: none; overflow: hidden;"></textarea>
+                <button type="submit" class="ui primary button">Send</button>
+            </div>
         </form>
     </div>
 {% endblock %}
-

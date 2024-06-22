@@ -1,1 +1,5 @@
-{{lecture.text}}
+{% extends "question/message.html" %}
+{% load markdown %}
+{% block content %}
+{{lecture.text|markdown|safe}}
+{% endblock %}

@@ -1,15 +1,20 @@
 <!-- templates/sentence_completion.html -->
-{% extends "question/base.html" %}
+{% extends "question/message.html" %}
 {% load custom_filters %}
 
 {% block content %}
-<div>
+
+<ul class="ui list">
+<li class="">
     {% for part in message.text|split_regex:"(_+)" %}
+        
         {% if part|contains_underscore %}
-            <input type="text" class="text-xl text-center border-b border-gray-300 focus:border-accent outline-none" x-model="user_answers[{{ forloop.counter0 }}]" />
+            <input type="text" class="massive text-center border-b border-gray-300 focus:border-accent outline-none" x-model="user_answers[{{ forloop.counter0 }}]" />
         {% else %}
-            <span class="text-xl">{{ part }}</span>
+            <span class="massive">{{ part }}</span>
         {% endif %}
-    {% endfor %}
-</div>
+        
+        {% endfor %}
+</li>
+</ul>
 {% endblock %}
