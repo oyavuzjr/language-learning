@@ -8,19 +8,10 @@
 {% endblock %}
 {% block page_content %}
 <div id="chat-box" class="" style="padding-bottom: 40px; margin-top:1rem;"> <!-- Ensure no overlap with the fixed form -->
-    <div class="ui text container">
-        <div class="ui raised very text segment" style="padding-left:20px; padding-right:20px;">
+    <div class="ui text" style="padding-right:50px;">
+        <div class="" >
             <h1 class="ui header">Chat</h1>
-            <div class="ui close left rail">
-                <div class="ui segment">
-                    Left Rail Content
-                </div>
-            </div>
-            <div class="ui close right rail">
-                <div class="ui segment">
-                    Right Rail Content
-                </div>
-            </div>
+            
             {{generated_content|safe}}
               </div>
             {% comment %} {% for message in chat.messages.all %}

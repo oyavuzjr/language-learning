@@ -12,7 +12,7 @@ class SentenceCompletionArgsSchema(BaseModel):
 
 class MultipleChoiceArgsSchema(BaseModel):
     text: str = Field(description="The question text")
-    choices: List[str] = Field(description="The 4 choices of the multiple choice question")
+    choices: List[str] = Field(description="The 4 unique choices of the multiple choice question")
     correct_answer_index: int = Field(description="The index of the correct answer in the choices list")
 
 
