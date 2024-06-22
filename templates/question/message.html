@@ -1,6 +1,6 @@
 {% load static markdown %}
 <div class="ui feed" style=" margin-bottom:40px;">
-    <div class="event">
+    <div class="ui floating message event" style="padding:15px;">
         <div class="label">
             {% if message.sender %}
                 <img height=100 width=100 alt="{{ message.sender.username }}" src="{% if message.sender.profile.image %}{{ message.sender.profile.image.url }}{% else %}https://cdn-icons-png.freepik.com/512/8742/8742495.png{% endif %}" />
@@ -19,7 +19,7 @@
                     AI
                 {% endif %}</a> created a post
             </div>
-            <div class="extra text">
+            <div class="segment extra text" style="font-size:large;">
                 {% block content %}
                 {% if message.sender %}
                     {{ message.text }}
