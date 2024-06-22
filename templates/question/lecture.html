@@ -1,1 +1,2 @@
-{{lecture.text}}
+{% load markdown %}
+{{lecture.text|markdown|safe}}
