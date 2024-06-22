@@ -1,4 +1,4 @@
-{% load static %}
+{% load static markdown %}
 <div class="ui feed" {% if message.sender %}style="float:right;"{% endif %}>
     <div class="event">
         <div class="label">
@@ -24,7 +24,7 @@
                 {% if message.sender %}
                     {{ message.text }}
                 {% else %}
-                    {{ message.text|safe }}
+                    {{ message.text|markdown|safe }}
                 {% endif %}
                 {% endblock %}
             </div>
