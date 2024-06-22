@@ -1,7 +1,7 @@
 from typing import List
 from langchain.tools import BaseTool, StructuredTool, tool, Tool
 from langchain.output_parsers import PydanticOutputParser, StructuredOutputParser
-from dashboard.models import CompletionQuestion, Lecture
+from dashboard.models import CompletionQuestion, Lecture, MultipleChoiceQuestion
 from utils.AI.question_generator import Exercises
 from langchain.pydantic_v1 import BaseModel, Field, validator
 
@@ -9,6 +9,11 @@ from langchain.pydantic_v1 import BaseModel, Field, validator
 class SentenceCompletionArgsSchema(BaseModel):
     questions: List[str] = Field(description="List of exercises with blank spots")
     answers: List[str] = Field(description="List of answers omitted from the blank spots")
+
+class MultipleChoiceArgsSchema(BaseModel):
+    text: str = Field(description="The question text")
+    choices: List[str] = Field(description="The 4 choices of the multiple choice question")
+    correct_answer_index: int = Field(description="The index of the correct answer in the choices list")
 
 
 class CreateLectureArgsSchema(BaseModel):
@@ -29,6 +34,20 @@ def create_sentence_completion_problems(questions:List[str], answers:List[str]):
         ids.append(q.id)
         
     return({'questions': questions, 'answers': answers,'ids':ids})
+    return {"success":True}
+
+@tool("create_multiple_choice_problems",args_schema=MultipleChoiceArgsSchema)
+def create_multiple_choice_problems(text:str, choices:List[str], correct_answer_index:int):
+    """
+    Create a multiple choice question on the given topic
+    Provide the choices as a list of strings.
+    And provide the index of the correct answer in the choices list.
+    """
+    q = MultipleChoiceQuestion(choices=choices, text=text,correct_answer=correct_answer_index)
+    q.save()
+    ids = [q.id]
+
+    return({'ids':ids})
     return {"success":True}
 
 

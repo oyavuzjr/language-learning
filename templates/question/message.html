@@ -1,5 +1,5 @@
 {% load static markdown %}
-<div class="ui feed" {% if message.sender %}style="float:right;"{% endif %}>
+<div class="ui feed" >
     <div class="event">
         <div class="label">
             {% if message.sender %}
@@ -27,9 +27,6 @@
                     {{ message.text|markdown|safe }}
                 {% endif %}
                 {% endblock %}
-            </div>
-            <div class="meta">
-                <time class="date">{{ message.created_at|date:"H:i" }}</time>
             </div>
         </div>
     </div>

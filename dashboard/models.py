@@ -52,6 +52,20 @@ class CompletionQuestion(ToolMessage):
     def get_tool_name(self):
         return "create_sentence_completion_problems"
 
+class MultipleChoiceQuestion(ToolMessage):
+    text = models.TextField()
+    choices = models.JSONField()
+    correct_answer = models.IntegerField()
+
+    def is_correct(self, answer):
+        return int(answer) == self.correct_answer
+
+    def get_html(self):
+        return render_to_string('question/question_multiple_choice.html', {'message': self, 'question_type': 'multipleChoiceQuestion'})
+
+    def get_tool_name(self):
+        return "create_multiple_choice_problems"
+
 class Lecture(ToolMessage):
     text = models.TextField()
 

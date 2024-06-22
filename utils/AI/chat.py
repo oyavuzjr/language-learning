@@ -16,7 +16,7 @@ from langchain.prompts import (
     MessagesPlaceholder,
     SystemMessagePromptTemplate
 )
-from utils.AI.tools import create_lecture, create_sentence_completion_problems, lecture_tool
+from utils.AI.tools import create_lecture, create_multiple_choice_problems, create_sentence_completion_problems, lecture_tool
 from langchain.agents import AgentExecutor, create_openai_tools_agent
 from typing import Dict, Tuple
 
@@ -37,7 +37,7 @@ load_dotenv()
 
 chat = ChatOpenAI(    
     model="gpt-4o",
-    temperature=0,
+    temperature=0.3,
     max_tokens=None,
     timeout=None,
     max_retries=2,)
@@ -54,7 +54,7 @@ def send_message(chat_id: int, text: str):
             MessagesPlaceholder(variable_name="agent_scratchpad")
         ]
     )
-    tools = [create_sentence_completion_problems, create_lecture]
+    tools = [create_sentence_completion_problems, create_lecture, create_multiple_choice_problems]
     agent = create_openai_tools_agent(chat, tools, prompt)
     agent_kwargs, memory = setup_memory(chat_id)
 

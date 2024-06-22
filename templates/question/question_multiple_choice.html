@@ -1,14 +1,14 @@
 <!-- templates/question_multiple_choice.html -->
-{% extends "question/base.html" %}
+{% extends "question/message.html" %}
 {% block content %}
-<div x-data="{ selectedChoice: null, selectChoice(index) { this.selectedChoice = index } }">
-    <h4 class="font-medium text-xl mb-2">{{ question.text|safe }}</h4>
-    {% for choice in question.choices %}
+<h4 class="font-medium text-xl mb-2">{{ message.text|safe }}</h4>
+<div class="ui grid" x-data="{ selectedChoice: null, selectChoice(index) { this.selectedChoice = index } }">
+    {% for choice in message.choices %}
         <button 
             x-on:click="selectChoice({{ forloop.counter0 }})" 
-            :class="selectedChoice === null ? 'btn-secondary' : (selectedChoice === {{ forloop.counter0 }} ? 'btn-primary' : 'bg-gray-400 border-gray-400')" 
+            :class="selectedChoice === null ? 'ui  button' : (selectedChoice === {{ forloop.counter0 }} ? 'ui primary button' : 'ui button')" 
             type="button" 
-            class="btn mr-2"
+            class="three wide column "
         >
             {{ choice }}
         </button>

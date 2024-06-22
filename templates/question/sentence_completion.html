@@ -9,7 +9,7 @@
     {% for part in message.text|split_regex:"(_+)" %}
         
         {% if part|contains_underscore %}
-            <input type="text" class="massive text-center border-b border-gray-300 focus:border-accent outline-none" x-model="user_answers[{{ forloop.counter0 }}]" />
+            <input type="text" class="massive text-center border-b border-gray-300 focus:border-accent outline-none" x-model="user_answers[{{ forloop.counter0 }}]" style="border-bottom:lightgray !important; border-bottom-style:solid !important; outline:none; text-align:center;" />
         {% else %}
             <span class="massive">{{ part }}</span>
         {% endif %}

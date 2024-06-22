@@ -73,7 +73,12 @@ def chat_view(request, pk):
             print("Args     : ", args)
 
         if isinstance(tools,list) and len(tools)>0:
-            query_results = BaseMessage.objects.filter(id__in=args["ids"])
+            ids = []
+            for tool in tools:
+                tool_to_use, args = tool
+                if "ids" in args:
+                    ids.extend(args["ids"])
+            query_results = BaseMessage.objects.filter(id__in=ids)
             for q in query_results:
                 q.chat = chat
                 q.save()
@@ -86,5 +91,6 @@ def chat_view(request, pk):
 
         # Message.objects.create(chat=chat, sender=None, text=output, json_data=json_data,tools_data=tools)
     messages = BaseMessage.objects.filter(chat=chat)
+    print("@@@@@",messages)
     generated_content = "".join([m.get_html() for m in messages])
     return render(request, 'dashboard/chat.html', {'chat': chat,'nav_items': get_nav_items(), 'generated_content':generated_content})
