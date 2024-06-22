@@ -7,14 +7,25 @@
     </script>
 {% endblock %}
 {% block page_content %}
-    <h1 class="ui header">Chat</h1>
-    <div id="chat-box" class="" style="padding-bottom: 40px;"> <!-- Ensure no overlap with the fixed form -->
-        <div class="ui raised very padded text container segment">
-            
+<div id="chat-box" class="" style="padding-bottom: 40px; margin-top:1rem;"> <!-- Ensure no overlap with the fixed form -->
+    <div class="ui text container">
+        <div class="ui raised very text segment" style="padding-left:20px; padding-right:20px;">
+            <h1 class="ui header">Chat</h1>
+            <div class="ui close left rail">
+                <div class="ui segment">
+                    Left Rail Content
+                </div>
+            </div>
+            <div class="ui close right rail">
+                <div class="ui segment">
+                    Right Rail Content
+                </div>
+            </div>
+            {{generated_content|safe}}
+              </div>
             {% comment %} {% for message in chat.messages.all %}
             {{message}}
             {% endfor %} {% endcomment %}
-            {{generated_content|safe}}
         </div>
     </div>
     <div class="ui segment fixed bottom-0 left-0 w-full lg:w-[calc(100%-16rem)] lg:left-64 p-4 shadow-lg border-base-200 border-t">
