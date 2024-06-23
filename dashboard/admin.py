@@ -1,11 +1,12 @@
 from django.contrib import admin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin, PolymorphicChildModelFilter
-from .models import Chat, BaseMessage, HumanMessage, AIMessage, ToolMessage,CompletionQuestion
+from .models import Chat, BaseMessage, HumanMessage, AIMessage, ToolMessage,CompletionQuestion,ToolGroup
 
 # class MessageInline(admin.TabularInline):
 #     model = BaseMessage
 #     list_display = ('created_at')
 #     extra = 1  # Number of empty message forms to display
+
 
 class ChatAdmin(admin.ModelAdmin):
     list_display = ('user', 'created_at')
@@ -17,6 +18,11 @@ admin.site.register(Chat, ChatAdmin)
 # Polymorphic admin for messages
 class BaseMessageChildAdmin(PolymorphicChildModelAdmin):
     base_model = BaseMessage  # Optional, explicitly set here.
+
+@admin.register(ToolGroup)
+class ToolGroupAdmin(BaseMessageChildAdmin):
+    pass
+    # inlines = [MessageInline]
 
 @admin.register(HumanMessage)
 class HumanMessageAdmin(BaseMessageChildAdmin):
