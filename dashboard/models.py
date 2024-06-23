@@ -74,3 +74,11 @@ class Lecture(ToolMessage):
 
     def get_tool_name(self):
         return "create_lecture"
+
+
+class ToolGroup(BaseMessage):
+    tool_messages = models.ManyToManyField(ToolMessage, related_name='tool_groups')
+
+    def get_html(self):
+        html_content = ''.join([tool_message.get_html() for tool_message in self.tool_messages.all()])
+        return render_to_string('question/tool_group.html', {'html_content': html_content})

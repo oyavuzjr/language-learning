@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from learning.models import FreeResponseQuestion, MultipleChoiceQuestion, ProblemSet, Question
 from django.contrib.auth.decorators import login_required
-from .models import BaseMessage, Chat, AIMessage, HumanMessage
+from .models import BaseMessage, Chat, AIMessage, HumanMessage, ToolGroup, ToolMessage
 from utils.AI.chat import send_message  # Import the send_message function
 from django.urls import reverse
 
@@ -57,40 +57,38 @@ def create_chat_view(request):
 
 @login_required
 def chat_view(request, pk):
-    generated_content=[]
+    generated_content = []
     chat = get_object_or_404(Chat, pk=pk, user=request.user)
     if request.method == "POST":
         text = request.POST.get('text')
-        
+
         # Get AI response
         json_data, text, output, tools = send_message(chat.id, text)  # Pass chat_id to send_message
-        # Save AI response to the database
+        # Save human message to the database
         HumanMessage.objects.create(chat=chat, sender=request.user, text=text)
 
-        for tool in tools:
-            tool_to_use, args = tool
-            print("Tool name: ", tool_to_use.tool)
-            print("Args     : ", args)
 
-        if isinstance(tools,list) and len(tools)>0:
+        if isinstance(tools, list) and len(tools) > 0:
+            tool_group = ToolGroup.objects.create(chat=chat)
             ids = []
             for tool in tools:
                 tool_to_use, args = tool
                 if "ids" in args:
                     ids.extend(args["ids"])
-            query_results = BaseMessage.objects.filter(id__in=ids)
+            query_results = ToolMessage.objects.filter(id__in=ids)
             for q in query_results:
-                q.chat = chat
-                q.save()
-            print(query_results)
+                # q.chat = chat
+                # q.save()
+                tool_group.tool_messages.add(q)
+            tool_group.save()
 
         else:
             ai_msg = AIMessage.objects.create(chat=chat, text=output)
             ai_msg.save()
-
+            # tool_group.tool_messages.add(ai_msg)
+            # tool_group.save()
 
         # Message.objects.create(chat=chat, sender=None, text=output, json_data=json_data,tools_data=tools)
     messages = BaseMessage.objects.filter(chat=chat)
-    print("@@@@@",messages)
     generated_content = "".join([m.get_html() for m in messages])
-    return render(request, 'dashboard/chat.html', {'chat': chat,'nav_items': get_nav_items(), 'generated_content':generated_content})
+    return render(request, 'dashboard/chat.html', {'chat': chat, 'nav_items': get_nav_items(), 'generated_content': generated_content})

@@ -1,6 +1,5 @@
 <!-- templates/question_multiple_choice.html -->
-{% extends "question/message.html" %}
-{% block content %}
+{% comment %} {% extends "question/message.html" %} {% endcomment %}
 <span class="font-medium text-xl" >{{ message.text|safe }}</span>
 <div class="ui three column doubling grid" x-data="{ selectedChoice: null, selectChoice(index) { this.selectedChoice = index } }" style="margin-top:5px; margin-bottom:15px;">
     {% for choice in message.choices %}
@@ -15,4 +14,3 @@
         </button>
     {% endfor %}
 </div>
-{% endblock %}
